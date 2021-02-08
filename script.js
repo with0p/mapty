@@ -55,3 +55,9 @@ form.addEventListener('submit', function (e) {
     .openPopup();
   form.querySelectorAll('input').forEach(input => (input.value = ''));
 });
+
+inputType.addEventListener('change', function () {
+  console.log('type');
+  inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
+  inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
+});
