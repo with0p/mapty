@@ -80,10 +80,13 @@ class App {
   #zoomLevel = 13;
   constructor() {
     this._getPosition();
+
+    // attach event handlers
     form.addEventListener('submit', this._newWorkout.bind(this));
     inputType.addEventListener('change', this._toggleElevationField);
     containerWorkouts.addEventListener('click', this._moveToPopup.bind(this));
   }
+
   _getPosition() {
     navigator.geolocation.getCurrentPosition(
       this._loadMap.bind(this),
@@ -92,6 +95,7 @@ class App {
       }
     );
   }
+
   _loadMap(position) {
     //   get current position
     const { latitude } = position.coords;
@@ -108,22 +112,29 @@ class App {
     // add marker for current position
     L.marker(coords).addTo(this.#map).bindPopup('Here you are').openPopup();
 
+    // add markers from LS
+    this._getLocalStorage();
+
     // show workout form
     this.#map.on('click', this._showForm.bind(this));
   }
+
   _showForm(mapE) {
     form.classList.remove('hidden');
     inputDistance.focus();
     this.#mapEvent = mapE;
   }
+
   _hideForm() {
     form.querySelectorAll('input').forEach(inpt => (inpt.value = ''));
     form.classList.add('hidden');
   }
+
   _toggleElevationField() {
     inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
     inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
   }
+
   _newWorkout(e) {
     e.preventDefault();
     const { lat, lng } = this.#mapEvent.latlng;
@@ -169,7 +180,11 @@ class App {
 
     //clear inputs and hide the form
     this._hideForm();
+
+    //update local storage
+    this._setLocalStorage();
   }
+
   _renderWorkoutMarker(wrkt) {
     L.marker(wrkt.coords)
       .addTo(this.#map)
@@ -249,6 +264,25 @@ class App {
         duration: 1,
       },
     });
+  }
+
+  _setLocalStorage() {
+    localStorage.setItem('workouts', JSON.stringify(this.#workouts));
+  }
+
+  _getLocalStorage() {
+    const lsData = JSON.parse(localStorage.getItem('workouts'));
+    if (!lsData) return;
+    this.#workouts = lsData;
+    this.#workouts.forEach(w => {
+      this._renderWorkout(w);
+      this._renderWorkoutMarker(w);
+    });
+  }
+
+  reset() {
+    localStorage.removeItem('workouts');
+    location.reload();
   }
 }
 
