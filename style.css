@@ -130,6 +130,7 @@ a:visited {
 
 .form.hidden {
   transform: translateY(-30rem);
+  transition: none;
   height: 0;
   padding: 0 2.25rem;
   margin-bottom: 0;
