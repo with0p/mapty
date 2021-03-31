@@ -1,0 +1,26 @@
+{
+  "name": "mapty",
+  "version": "1.0.0",
+  "description": "This is a training project. HTML/CSS files were provided as course materials by Jonas Schmedtmann https://codingheroes.io/",
+  "main": "script.js",
+  "scripts": {
+    "build:babel": "npx babel script.js --out-file script-compiled.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/with0p/mapty.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/with0p/mapty/issues"
+  },
+  "homepage": "https://github.com/with0p/mapty#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.13.14",
+    "@babel/core": "^7.13.14",
+    "@babel/node": "^7.13.13",
+    "@babel/polyfill": "^7.12.1",
+    "@babel/preset-env": "^7.13.12"
+  }
+}
