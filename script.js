@@ -77,7 +77,9 @@ class App {
   #map;
   #mapEvent;
   #workouts = [];
+  #markers = [];
   #zoomLevel = 13;
+  #currentPosition = { coords: { latitude: 59.938752, longitude: 30.315081 } };
   constructor() {
     this._getPosition();
 
@@ -89,22 +91,23 @@ class App {
 
   _getPosition() {
     navigator.geolocation.getCurrentPosition(
-      this._loadMap.bind(this),
-      this._setDefaultPosition.bind(this)
+      position => {
+        this.#currentPosition = position;
+        this._loadMap(this.#currentPosition);
+      },
+      () => {
+        alert('Your position is unknown, so map is set to defailt location');
+        this._loadMap(this.#currentPosition);
+      }
     );
   }
 
-  _setDefaultPosition() {
-    alert('Your location is unknown, so map will be set to default');
-    this._loadMap({ coords: { latitude: 59.938752, longitude: 30.315081 } });
-  }
-
   _loadMap(position) {
-    console.log(position);
     //   get current position
     const { latitude } = position.coords;
     const { longitude } = position.coords;
     const coords = [latitude, longitude];
+    this.#markers.push(coords);
 
     // load map
     this.#map = L.map('map').setView(coords, this.#zoomLevel);
@@ -121,6 +124,11 @@ class App {
 
     // show workout form
     this.#map.on('click', this._showForm.bind(this));
+  }
+
+  _zoomToDisplayMarkers() {
+    const group = L.latLngBounds(this.#markers);
+    this.#map.fitBounds(group, true);
   }
 
   _showForm(mapE) {
@@ -205,6 +213,7 @@ class App {
         `${wrkt.type === 'running' ? '🏃‍♂️' : '🚴‍♀️'} ${wrkt.description}`
       )
       .openPopup();
+    this.#markers.push(wrkt.coords);
   }
 
   _renderWorkout(workout) {
@@ -281,6 +290,7 @@ class App {
     this.#workouts.forEach(w => {
       this._renderWorkout(w);
       this._renderWorkoutMarker(w);
+      this._zoomToDisplayMarkers();
     });
   }
 
