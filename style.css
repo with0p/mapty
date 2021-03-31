@@ -169,7 +169,9 @@ a:visited {
 }
 
 .form__btn {
-  display: none;
+  border: none;
+  height: 0;
+  width: 0;
 }
 
 .copyright {

@@ -428,3 +428,5 @@ var App = /*#__PURE__*/function () {
 }();
 
 var app = new App();
+
+//# sourceMappingURL=script-compiled.js.map

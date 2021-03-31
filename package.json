@@ -4,7 +4,7 @@
   "description": "This is a training project. HTML/CSS files were provided as course materials by Jonas Schmedtmann https://codingheroes.io/",
   "main": "script.js",
   "scripts": {
-    "build:babel": "npx babel script.js --out-file script-compiled.js"
+    "build:babel": "npx babel script.js --out-file script-compiled.js --source-maps"
   },
   "repository": {
     "type": "git",
