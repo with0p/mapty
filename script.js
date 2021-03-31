@@ -79,7 +79,9 @@ class App {
   #workouts = [];
   #markers = [];
   #zoomLevel = 13;
-  #currentPosition = { coords: { latitude: 59.938752, longitude: 30.315081 } };
+  #defaultPosition = { coords: { latitude: 59.938752, longitude: 30.315081 } };
+  #positionMarker;
+
   constructor() {
     this._getPosition();
 
@@ -92,14 +94,17 @@ class App {
   _getPosition() {
     navigator.geolocation.getCurrentPosition(
       position => {
-        this.#currentPosition = position;
-        this._loadMap(this.#currentPosition);
+        const { latitude } = position.coords;
+        const { longitude } = position.coords;
+        const coords = [latitude, longitude];
+        this.#map.flyTo(coords);
+        this.#positionMarker.setLatLng(coords);
       },
       () => {
         alert('Your position is unknown, so map is set to defailt location');
-        this._loadMap(this.#currentPosition);
       }
     );
+    this._loadMap(this.#defaultPosition);
   }
 
   _loadMap(position) {
@@ -117,7 +122,8 @@ class App {
     }).addTo(this.#map);
 
     // add marker for current position
-    L.marker(coords).addTo(this.#map).bindPopup('Here you are').openPopup();
+    this.#positionMarker = L.marker(coords);
+    this.#positionMarker.addTo(this.#map).bindPopup('Here you are').openPopup();
 
     // add markers from LS
     this._getLocalStorage();
