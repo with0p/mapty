@@ -90,13 +90,17 @@ class App {
   _getPosition() {
     navigator.geolocation.getCurrentPosition(
       this._loadMap.bind(this),
-      function () {
-        alert('No map then,sorry');
-      }
+      this._setDefaultPosition.bind(this)
     );
   }
 
+  _setDefaultPosition() {
+    alert('Your location is unknown, so map will be set to default');
+    this._loadMap({ coords: { latitude: 59.938752, longitude: 30.315081 } });
+  }
+
   _loadMap(position) {
+    console.log(position);
     //   get current position
     const { latitude } = position.coords;
     const { longitude } = position.coords;
